@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ระบบร้องคาราโอเกะ — ร้องคาราโอเกะที่บ้าน สั่งเพลงจากมือถือ</title>
+<meta name="description" content="โปรแกรมคาราโอเกะสำหรับที่บ้านและร้าน ค้นเพลงจาก YouTube ออกจอใหญ่ ให้ทุกคนสั่งเพลงเข้าคิวจากมือถือได้ ใช้ฟรี ไฟล์เดียวจบ">
+<meta property="og:title" content="ระบบร้องคาราโอเกะ">
+<meta property="og:description" content="ร้องคาราโอเกะที่บ้าน เพลงจาก YouTube ทุกคนสั่งเพลงจากมือถือได้ ใช้ฟรี">
+<meta property="og:type" content="website">
+<style>
+  :root {
+    --bg: #f6f7fb;
+    --card: #ffffff;
+    --ink: #16181d;
+    --dim: #5b6172;
+    --line: #e3e6ef;
+    --brand: #f59119;
+    --brand-ink: #1a1204;
+    --shadow: 0 1px 2px rgba(16,20,40,.06), 0 12px 32px rgba(16,20,40,.08);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0e1016;
+      --card: #171b23;
+      --ink: #eef1f7;
+      --dim: #99a1b3;
+      --line: #262c38;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 12px 32px rgba(0,0,0,.45);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0e1016;
+    --card: #171b23;
+    --ink: #eef1f7;
+    --dim: #99a1b3;
+    --line: #262c38;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 12px 32px rgba(0,0,0,.45);
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Segoe UI", "Sarabun", "Noto Sans Thai", system-ui, -apple-system, sans-serif;
+    line-height: 1.75;
+    overflow-x: hidden;
+  }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 20px; }
+
+  header { padding: 72px 0 8px; text-align: center; }
+  .logo { width: 84px; height: 84px; margin-bottom: 18px; }
+  h1 { font-size: clamp(30px, 5.5vw, 46px); margin: 0 0 12px; letter-spacing: -.5px; }
+  .lead { font-size: clamp(16px, 2.4vw, 20px); color: var(--dim); margin: 0 auto 32px; max-width: 640px; }
+
+  .cta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 10px; }
+  .btn {
+    display: inline-block; padding: 15px 34px; border-radius: 12px;
+    font-size: 17px; font-weight: 700; text-decoration: none;
+    border: 1px solid transparent; transition: transform .12s ease, box-shadow .12s ease;
+  }
+  .btn:hover { transform: translateY(-1px); }
+  .btn-main { background: var(--brand); color: var(--brand-ink); box-shadow: 0 8px 22px rgba(245,145,25,.32); }
+  .btn-ghost { background: var(--card); color: var(--ink); border-color: var(--line); }
+  .sub { text-align: center; color: var(--dim); font-size: 14px; margin: 0 0 56px; }
+
+  .shot { margin: 0 0 56px; border-radius: 14px; overflow: hidden; border: 1px solid var(--line); box-shadow: var(--shadow); }
+  .shot img { display: block; width: 100%; height: auto; }
+
+  h2 { font-size: clamp(22px, 3.4vw, 28px); margin: 0 0 26px; text-align: center; }
+  section { margin-bottom: 64px; }
+
+  .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 22px 24px; box-shadow: var(--shadow); }
+  .card h3 { margin: 0 0 6px; font-size: 17px; }
+  .card p { margin: 0; color: var(--dim); font-size: 15px; }
+
+  .split { display: grid; gap: 34px; grid-template-columns: 300px 1fr; align-items: center; }
+  .split img { width: 100%; height: auto; border-radius: 14px; border: 1px solid var(--line); box-shadow: var(--shadow); }
+  @media (max-width: 720px) { .split { grid-template-columns: 1fr; } .split .phone { max-width: 280px; margin: 0 auto; } }
+
+  ol.steps { counter-reset: s; list-style: none; padding: 0; margin: 0; }
+  ol.steps li { counter-increment: s; position: relative; padding: 0 0 20px 52px; }
+  ol.steps li::before {
+    content: counter(s); position: absolute; left: 0; top: 2px;
+    width: 32px; height: 32px; border-radius: 50%; background: var(--brand); color: var(--brand-ink);
+    display: grid; place-items: center; font-weight: 700; font-size: 15px;
+  }
+  ol.steps strong { display: block; }
+  ol.steps span { color: var(--dim); font-size: 15px; }
+
+  .note { background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--brand); border-radius: 12px; padding: 18px 22px; }
+  .note > strong { display: block; margin-bottom: 4px; }
+  .note p { margin: 0; color: var(--dim); font-size: 15px; }
+
+  table { width: 100%; border-collapse: collapse; background: var(--card); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+  td { padding: 13px 20px; border-bottom: 1px solid var(--line); font-size: 15px; }
+  tr:last-child td { border-bottom: 0; }
+  td:first-child { color: var(--dim); width: 42%; }
+
+  footer { border-top: 1px solid var(--line); padding: 30px 0 60px; text-align: center; color: var(--dim); font-size: 14px; }
+  footer a { color: inherit; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <img class="logo" src="logo.svg" alt="">
+    <h1>ระบบร้องคาราโอเกะ</h1>
+    <p class="lead">ค้นเพลงจาก YouTube เล่นออกจอใหญ่ แล้วให้ทุกคนในงานหยิบมือถือขึ้นมาจิ้มเพลงเข้าคิวเองได้ ไม่ต้องเดินมาที่คอม</p>
+    <div class="cta">
+      <a class="btn btn-main" id="dl" href="https://github.com">⬇️ ดาวน์โหลดฟรี</a>
+      <a class="btn btn-ghost" id="repo" href="https://github.com">ดูรายละเอียด</a>
+    </div>
+    <p class="sub">ไฟล์เดียวจบ · ไม่ต้องติดตั้ง · ไม่ต้องสมัครอะไร · สำหรับ Windows 10/11</p>
+  </header>
+
+  <div class="shot"><img src="desktop.png" alt="หน้าจอหลักของโปรแกรม แสดงช่องค้นหาเพลง ผลการค้นหา เครื่องเล่น และคิวเพลง"></div>
+
+  <section>
+    <h2>ทำอะไรได้บ้าง</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>🔎 ค้นเพลงจาก YouTube</h3>
+        <p>พิมพ์ชื่อเพลงแล้วกด Enter ระบบเติมคำว่า “คาราโอเกะ” ให้เอง จะได้เจอแต่คลิปที่ร้องตามได้ อยากฟังเพลงปกติก็สลับโหมดได้</p>
+      </div>
+      <div class="card">
+        <h3>🖥️ แยกจอชัดเจน</h3>
+        <p>จอคอมเป็นแผงควบคุม ทีวีหรือโปรเจกเตอร์เป็นจอ 2 แสดงเฉพาะวิดีโอเต็มจอ ไม่มีปุ่มอะไรมากวนสายตาคนร้อง</p>
+      </div>
+      <div class="card">
+        <h3>📱 ทุกคนสั่งเพลงเองได้</h3>
+        <p>สแกน QR แล้วเพิ่มเพลงเข้าคิวจากมือถือได้เลย ต่อพร้อมกันได้หลายสิบเครื่อง ไม่ต้องแย่งคีย์บอร์ดกัน</p>
+      </div>
+      <div class="card">
+        <h3>📋 คิวเป็นระเบียบ</h3>
+        <p>ใครใส่ทีหลังก็ได้ร้องทีหลัง ไม่มีแซงคิว ถ้าอยากดันเพลงไหนขึ้นก่อนก็ดับเบิลคลิกที่เพลงนั้นได้</p>
+      </div>
+      <div class="card">
+        <h3>⚠️ เตือนเพลงซ้ำ</h3>
+        <p>ถ้ามีคนใส่เพลงที่มีอยู่แล้ว ระบบบอกเลยว่าอยู่คิวที่เท่าไหร่ แล้วถามก่อนว่าจะใส่เพิ่มอีกไหม</p>
+      </div>
+      <div class="card">
+        <h3>💾 คิวไม่หาย</h3>
+        <p>ปิดโปรแกรมแล้วเปิดใหม่ คิวเดิมยังอยู่ครบ ไม่ต้องมานั่งใส่เพลงใหม่ทั้งหมด</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>สั่งเพลงจากมือถือ</h2>
+    <div class="split">
+      <div class="phone"><img src="mobile.png" alt="หน้าจอโปรแกรมบนมือถือ แสดงช่องค้นหาและผลการค้นหาเพลง"></div>
+      <div>
+        <p>เปิดโปรแกรมแล้วกดปุ่ม <strong>เข้าจากมือถือ</strong> จะมี QR ขึ้นมา ให้เพื่อน ๆ ในงานสแกนได้เลย
+        ไม่ต้องโหลดแอป ไม่ต้องสมัครอะไร แค่เปิดเบราว์เซอร์ในมือถือก็ค้นเพลง เพิ่มเข้าคิว
+        ดูว่าเหลืออีกกี่เพลงถึงตาตัวเอง และสั่งเล่น/หยุด/ข้ามได้เหมือนนั่งอยู่หน้าคอม</p>
+        <p>ใช้ได้ทั้งแนวตั้งและแนวนอน ขอแค่ต่อ Wi-Fi วงเดียวกับเครื่องที่เปิดโปรแกรม</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>เริ่มใช้ใน 4 ขั้นตอน</h2>
+    <ol class="steps">
+      <li><strong>โหลดไฟล์ Karaoke.exe</strong><span>ไฟล์เดียวประมาณ 8 MB ไม่ต้องติดตั้ง</span></li>
+      <li><strong>ดับเบิลคลิกเปิด</strong><span>ครั้งแรก Windows Firewall จะถาม ให้ติ๊ก “เครือข่ายส่วนตัว” แล้วกดอนุญาต ไม่งั้นมือถือจะเข้าไม่ได้</span></li>
+      <li><strong>กดปุ่ม “เปิดจอ 2”</strong><span>ส่งภาพวิดีโอไปที่ทีวีหรือโปรเจกเตอร์แบบเต็มจอ</span></li>
+      <li><strong>กดปุ่ม “เข้าจากมือถือ”</strong><span>โชว์ QR ให้ทุกคนในงานสแกน แล้วเริ่มร้องได้เลย</span></li>
+    </ol>
+    <div class="note">
+      <strong>ถ้า Windows ขึ้นจอฟ้าว่า “Windows protected your PC”</strong>
+      <p>เป็นเรื่องปกติของโปรแกรมเล็ก ๆ ที่ไม่ได้ซื้อใบรับรองราคาแพงมาเซ็นกำกับ กด <strong>More info</strong> แล้วกด <strong>Run anyway</strong> ก็ใช้งานได้ตามปกติ</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>ต้องมีอะไรบ้าง</h2>
+    <table>
+      <tr><td>ระบบปฏิบัติการ</td><td>Windows 10 หรือ 11</td></tr>
+      <tr><td>เบราว์เซอร์</td><td>Chrome หรือ Edge (Windows มี Edge ติดมาให้อยู่แล้ว)</td></tr>
+      <tr><td>อินเทอร์เน็ต</td><td>ต้องมี เพราะเพลงมาจาก YouTube</td></tr>
+      <tr><td>มือถือ</td><td>ต่อ Wi-Fi วงเดียวกับคอม</td></tr>
+      <tr><td>สิ่งที่ไม่ต้องมี</td><td>ไม่ต้องลง Python ไม่ต้องขอ API key ไม่ต้องสมัครสมาชิก</td></tr>
+    </table>
+  </section>
+
+  <div class="cta" style="margin-bottom:14px">
+    <a class="btn btn-main" id="dl2" href="https://github.com">⬇️ ดาวน์โหลดฟรี</a>
+  </div>
+  <p class="sub">ใช้ฟรี ไม่มีโฆษณา ไม่เก็บข้อมูลผู้ใช้</p>
+</div>
+
+<footer>
+  <div class="wrap">
+    <p>โปรแกรมนี้เป็นเครื่องมือช่วยเปิดคลิปจาก YouTube ไม่ได้เก็บหรือแจกจ่ายไฟล์เพลง<br>
+    และไม่มีส่วนเกี่ยวข้องกับ YouTube หรือ Google</p>
+    <p>สงวนลิขสิทธิ์ · แจกให้ใช้ฟรี ไม่อนุญาตให้นำไปขายต่อ</p>
+  </div>
+</footer>
+
+<script>
+/* หน้านี้วางอยู่ที่ https://<ชื่อผู้ใช้>.github.io/<ชื่อ repo>/
+   จึงอ่านชื่อผู้ใช้กับชื่อ repo จากที่อยู่หน้าเว็บ แล้วประกอบลิงก์ดาวน์โหลดเอง
+   ไม่ต้องมาแก้ไฟล์นี้เวลาเปลี่ยนชื่อ repo */
+(function () {
+  var host = location.hostname.match(/^([^.]+)\.github\.io$/);
+  var repo = location.pathname.split('/').filter(Boolean)[0];
+  if (!host || !repo) return;
+  var base = 'https://github.com/' + host[1] + '/' + repo;
+  var dl = base + '/releases/latest';
+  ['dl', 'dl2'].forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) el.href = dl;
+  });
+  var r = document.getElementById('repo');
+  if (r) r.href = base;
+})();
+</script>
+
+</body>
+</html>

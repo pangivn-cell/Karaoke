@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="คาราโอเกะ">
+  <defs>
+    <linearGradient id="mic" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffd166"/>
+      <stop offset="1" stop-color="#ff9f1c"/>
+    </linearGradient>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#222c44"/>
+      <stop offset="1" stop-color="#12172a"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="1" y="1" width="62" height="62" rx="15" fill="url(#bg)"/>
+
+  <!-- คลื่นเสียงสองข้าง สื่อว่ากำลังร้องออกมา -->
+  <g fill="none" stroke="#ff9f1c" stroke-linecap="round" opacity=".95">
+    <path d="M14 25a9 9 0 0 0 0 14" stroke-width="3.2"/>
+    <path d="M50 25a9 9 0 0 1 0 14" stroke-width="3.2"/>
+    <path d="M8 20a17 17 0 0 0 0 24" stroke-width="2.6" opacity=".55"/>
+    <path d="M56 20a17 17 0 0 1 0 24" stroke-width="2.6" opacity=".55"/>
+  </g>
+
+  <!-- ตัวไมโครโฟน -->
+  <rect x="26" y="10" width="12" height="25" rx="6" fill="url(#mic)"/>
+  <g stroke="#1a1206" stroke-width="1.4" stroke-linecap="round" opacity=".45">
+    <path d="M28.5 17h7M28.5 21h7M28.5 25h7"/>
+  </g>
+
+  <!-- ขาตั้งและฐาน -->
+  <g fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linecap="round">
+    <path d="M21 31a11 11 0 0 0 22 0"/>
+    <path d="M32 42v9"/>
+    <path d="M25 54h14"/>
+  </g>
+</svg>

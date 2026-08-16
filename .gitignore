@@ -1,0 +1,12 @@
+# ห้ามให้โค้ดโปรแกรมหลุดขึ้นไปเด็ดขาด repo นี้มีแค่หน้าอธิบายกับรูป
+*.py
+*.pyc
+__pycache__/
+*.spec
+build/
+dist/
+release/
+build_web/
+backup/
+*.exe
+config.json
